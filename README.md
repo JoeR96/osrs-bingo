@@ -3,9 +3,9 @@
 ## TODO
 
 - [X] Make It Deploy (vercel)
-- [] Scaffold basic UI with mock data
-- [] Setup Database (vercel postgres)
-- [] Attach Database to UI
+- [X] Scaffold basic UI with mock data
+- [X] Setup Database (vercel postgres)
+- [X] Attach Database to UI
 - [] Add Authentication (w/ clerk)
 - [] Add Bingo Board        
 - [] Add Error Handling (sentry)

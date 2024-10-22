@@ -18,11 +18,12 @@ import {
  */
 export const createTable = pgTableCreator((name) => `osrs-bingo_${name}`);
 
-export const posts = createTable(
-  "post",
+export const bingo_tasks = createTable(
+  "bingo_task",
   {
     id: serial("id").primaryKey(),
-    name: varchar("name", { length: 256 }),
+    name: varchar("name", { length: 256 }).notNull(),
+    url: varchar("url", { length: 1024 }).notNull(),
     createdAt: timestamp("created_at", { withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
