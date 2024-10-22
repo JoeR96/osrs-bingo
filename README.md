@@ -6,7 +6,7 @@
 - [X] Scaffold basic UI with mock data
 - [X] Setup Database (vercel postgres)
 - [X] Attach Database to UI
-- [] Add Authentication (w/ clerk)
+- [X] Add Authentication (w/ clerk)
 - [] Add Bingo Board        
 - [] Add Error Handling (sentry)
 - [] Add Bingo Cards
