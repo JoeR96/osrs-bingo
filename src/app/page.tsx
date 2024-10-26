@@ -7,9 +7,9 @@ import useBoardStore from "./state/bingoboardstore";
 export default function HomePage() {
   const { boardData, setBoardData } = useBoardStore();
 
-  return (
-    <main className="flex flex-col items-center justify-center h-screen">
-        {boardData ? <BingoBoard board={boardData} /> : <AccessCodeBox />}
-    </main>
-  );
+return (
+  <main className="flex flex-col items-center justify-center">
+    {boardData ? <BingoBoard board={boardData} /> : <AccessCodeBox />}
+  </main>
+);
 }

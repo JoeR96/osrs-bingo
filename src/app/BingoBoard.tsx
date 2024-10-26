@@ -11,7 +11,7 @@ type BingoBoardProps = {
 const BingoBoard = ({ board }: { board: BingoBoardProps }) => {
   return (
     <div className=" m-10">
-      <div className="p-6 bg-gray-900 shadow-lg rounded-lg mb-6">
+      <div >
         <div className="text-center text-gray-200">
           <h2 className="text-2xl font-bold mb-2">{board.name}</h2>
           <p className="mb-1">Description: {board.description}</p>
@@ -34,8 +34,8 @@ const BingoBoardTask = ({ task }: { task: BingoTask }) => {
     <div className="bg-gray-800 p-4 shadow-md rounded-lg w-64">
       <div className="flex flex-col h-full">
         <div className="flex-1">
-          <h3 className="text-lg font-semibold text-white mb-1">{task.name}</h3>
-          <p className="text-gray-400">{task.description}</p>
+          <h3 className="text-lg font-semibold text-white mb-1 text-center">{task.name}</h3>
+          <p className="text-gray-400 text-center">{task.description}</p>
         </div>
         <div className="relative w-full h-40 bg-gray-700 flex items-center justify-center rounded-md mt-2">
           <Image
