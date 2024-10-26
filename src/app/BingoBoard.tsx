@@ -20,7 +20,7 @@ const BingoBoard = ({ board }: { board: BingoBoardProps }) => {
       </div>
       <div className="p-6 bg-gray-900 shadow-lg rounded-lg">
         <div className="flex flex-wrap justify-center mt-6 gap-4">
-          {dummyTasks.map((task, index) => (
+          {[...dummyTasks,...dummyTasks].map((task, index) => (
             <BingoBoardTask key={index} task={task} />
           ))}
         </div>
