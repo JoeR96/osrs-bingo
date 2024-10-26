@@ -16,8 +16,6 @@ const BingoBoard = ({ board }: { board: BingoBoardProps }) => {
           <h2 className="text-2xl font-bold mb-2">{board.name}</h2>
           <p className="mb-1">Description: {board.description}</p>
           <p className="mb-1">Access Code: {board.accessCode}</p>
-          <p className="text-sm">Created At: {new Date(board.createdAt).toLocaleString()}</p>
-          <p className="text-sm">Updated At: {new Date(board.updatedAt).toLocaleString()}</p>
         </div>
       </div>
       <div className="p-6 bg-gray-900 shadow-lg rounded-lg">
