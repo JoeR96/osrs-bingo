@@ -22,7 +22,7 @@ export function TopNav() {
     };
 
     return (
-      <nav className="flex w-full items-center justify-between p-4 text-xl font-semibold border-b space">
+      <nav className=" flex w-full items-center justify-between p-4 text-xl font-semibold border-b space bg-gray-900">
         <div>Bingo Board</div>
         <div className="flex items-center space-x-4">
             <button onClick={handleHomeClick}>Home</button>

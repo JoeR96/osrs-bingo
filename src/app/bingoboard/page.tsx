@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { BingoBoard } from "~/types/types";
+import { BingoBoard as BingoBoardType } from "~/types/types";
 import BingoBoard, { BingoBoardTask } from "../BingoBoard";
 
 export default function EditBingoBoard() {
@@ -97,15 +97,8 @@ function UserOwnedBingoBoards({ userOwnedBoards, selectedBoard, setSelectedBoard
 
             {selectedBoard && (
                 <>
-                    {bingoTasks.length > 0 ? (
-                        <div className="flex flex-wrap justify-center mt-6 gap-4">
-                            {bingoTasks.map((task, index) => (
-                                <BingoBoardTask key={index} task={task} />
-                            ))}
-                        </div>
-                    ) : (
-                        <p>No tasks currently assigned to this board.</p>
-                    )}
+                    
+                    <BingoBoard board={selectedBoard} />
 
                     <button onClick={toggleDropdown}>
                         {isDropdownVisible ? 'Hide Task Selection' : 'Add Tasks'}
@@ -130,7 +123,7 @@ function TaskDropdown({ allTasks, selectedTasks, handleTaskSelection }) {
     return (
         <div>
             <h4>Select tasks to add:</h4>
-            <div className="mt-2 p-2 border border-gray-400 rounded-md bg-black">
+            <div className="mt-2 p-2 border border-gray-400 rounded-m">
                 {allTasks.map((task) => (
                     <div key={task.id} className="flex items-center mb-2">
                         <input

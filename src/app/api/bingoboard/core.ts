@@ -22,8 +22,17 @@ export const ourBingoRouter = {
         return newBoard;
     },
 
-    async getBingoBoard(id: string) {
-        const board = await db.query.bingo_boards.findFirst({ where: eq(bingo_boards.accessCode, id) });
+    async getBingoBoardById(id: string) {
+        const board = await db.query.bingo_boards.findFirst({ where: eq(bingo_boards.id, id) });
+
+        if (!board) throw new Error("Individual board not found");
+
+        console.log(board)
+        return board;
+    },
+
+    async getBingoBoardByAccessCode(access_code: string) {
+        const board = await db.query.bingo_boards.findFirst({ where: eq(bingo_boards.accessCode, access_code) });
 
         if (!board) throw new Error("Individual board not found");
 

@@ -10,22 +10,14 @@ type BingoBoardProps = {
 };
 const BingoBoard = ({ board }: { board: BingoBoardProps }) => {
   return (
-    <div className=" m-10">
-      <div >
-        <div className="text-center text-gray-200">
-          <h2 className="text-2xl font-bold mb-2">{board.name}</h2>
-          <p className="mb-1">Description: {board.description}</p>
-          <p className="mb-1">Access Code: {board.accessCode}</p>
-        </div>
-      </div>
-      <div className="p-6 bg-gray-900 shadow-lg rounded-lg">
+      <div className='p-6 bg-gray-900 shadow-lg rounded-lg h-100'>
+        <h2 className="text-6xl font-extrabold text-center mb-2">{board.name}</h2>
         <div className="flex flex-wrap justify-center mt-6 gap-4">
           {[...dummyTasks,...dummyTasks].map((task, index) => (
             <BingoBoardTask key={index} task={task} />
           ))}
         </div>
       </div>
-    </div>
   );
 };
 
@@ -37,7 +29,7 @@ export const BingoBoardTask = ({ task }: { task: BingoTask }) => {
           <h3 className="text-lg font-semibold text-white mb-1 text-center">{task.name}</h3>
           <p className="text-gray-400 text-center">{task.description}</p>
         </div>
-        <div className="relative w-full h-40 bg-gray-700 flex items-center justify-center rounded-md mt-2">
+        <div className="relative w-full h-14  flex items-center justify-center rounded-md mt-2">
           <Image
             src={task.url}
             alt={task.name}

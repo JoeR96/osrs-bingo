@@ -11,7 +11,7 @@ export const AccessCodeBox = () => {
         e.preventDefault();
     
         try {
-            const response = await fetch(`/api/bingoboard/${code}`, {
+            const response = await fetch(`/api/accesscode/${code}`, {
                 method: 'GET'
             });
     
