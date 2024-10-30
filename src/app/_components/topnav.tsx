@@ -26,14 +26,14 @@ export function TopNav() {
         <div>Bingo Board</div>
         <div className="flex items-center space-x-4">
             <button onClick={handleHomeClick}>Home</button>
-            <button onClick={handleTasksClick}>Tasks</button>
             <SignedOut>
                 <SignInButton />
             </SignedOut>
             <SignedIn>
+                <button onClick={handleTasksClick}>Tasks</button>
                 <CreateBingoBoard />
-                <UserButton />
                 <button onClick={handleEditBingoBoardClick}>Edit Bingo Board</button>
+                <UserButton />
             </SignedIn>
         </div>
       </nav>

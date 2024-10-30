@@ -35,6 +35,7 @@ export default function EditBingoBoard() {
 function UserOwnedBingoBoards({ userOwnedBoards, selectedBoard, setSelectedBoard, bingoTasks, setBingoTasks }) {
     const [allTasks, setAllTasks] = useState([]);
     const [selectedTasks, setSelectedTasks] = useState([]);
+    const [isDropdownVisible, setIsDropdownVisible] = useState(false);
 
     useEffect(() => {
         const fetchAllTasks = async () => {
@@ -75,21 +76,25 @@ function UserOwnedBingoBoards({ userOwnedBoards, selectedBoard, setSelectedBoard
         }
     };
 
+    const toggleDropdown = () => {
+        setIsDropdownVisible(!isDropdownVisible);
+    };
+
     return (
         <div>
-              <div >
+            <div>
                 <div className="text-center text-gray-200">
-                <h2 className="text-2xl font-bold mb-2">User Owned Bingo Boards</h2>
-                <ul>
-                {userOwnedBoards.map((board) => (
-                    <li key={board.id} onClick={() => handleBoardClick(board)}>
-                        <h3 className="mb-1">{board.name}</h3>
-                    </li>
-                ))}
-            </ul>
+                    <h2 className="text-2xl font-bold mb-2">User Owned Bingo Boards</h2>
+                    <ul>
+                        {userOwnedBoards.map((board) => (
+                            <li key={board.id} onClick={() => handleBoardClick(board)}>
+                                <h3 className="mb-1">{board.name}</h3>
+                            </li>
+                        ))}
+                    </ul>
                 </div>
             </div>
-          
+
             {selectedBoard && (
                 <>
                     {bingoTasks.length > 0 ? (
@@ -101,24 +106,44 @@ function UserOwnedBingoBoards({ userOwnedBoards, selectedBoard, setSelectedBoard
                     ) : (
                         <p>No tasks currently assigned to this board.</p>
                     )}
-                    <h4>Select tasks to add:</h4>
-                    <ul>
-                        {allTasks.map((task) => (
-                            <li key={task.id}>
-                                <label>
-                                    <input
-                                        type="checkbox"
-                                        checked={selectedTasks.includes(task.id)}
-                                        onChange={() => handleTaskSelection(task.id)}
-                                    />
-                                    {task.name}
-                                </label>
-                            </li>
-                        ))}
-                    </ul>
+
+                    <button onClick={toggleDropdown}>
+                        {isDropdownVisible ? 'Hide Task Selection' : 'Add Tasks'}
+                    </button>
+
+                    {isDropdownVisible && (
+                        <TaskDropdown 
+                            allTasks={allTasks} 
+                            selectedTasks={selectedTasks} 
+                            handleTaskSelection={handleTaskSelection} 
+                        />
+                    )}
+
                     <button onClick={handleAddTasksToBoard}>Add Selected Tasks to Board</button>
                 </>
             )}
+        </div>
+    );
+}
+
+function TaskDropdown({ allTasks, selectedTasks, handleTaskSelection }) {
+    return (
+        <div>
+            <h4>Select tasks to add:</h4>
+            <div className="mt-2 p-2 border border-gray-400 rounded-md bg-black">
+                {allTasks.map((task) => (
+                    <div key={task.id} className="flex items-center mb-2">
+                        <input
+                            type="checkbox"
+                            className="mr-2"
+                            checked={selectedTasks.includes(task.id)}
+                            onChange={() => handleTaskSelection(task.id)}
+                        />
+                        <img src={task.url} alt={task.name} className="w-6 h-6 mr-2" />
+                        <span>{task.name}</span>
+                    </div>
+                ))}
+            </div>
         </div>
     );
 }
