@@ -29,7 +29,7 @@ const BingoBoard = ({ board }: { board: BingoBoardProps }) => {
   );
 };
 
-const BingoBoardTask = ({ task }: { task: BingoTask }) => {
+export const BingoBoardTask = ({ task }: { task: BingoTask }) => {
   return (
     <div className="bg-gray-800 p-4 shadow-md rounded-lg w-64">
       <div className="flex flex-col h-full">

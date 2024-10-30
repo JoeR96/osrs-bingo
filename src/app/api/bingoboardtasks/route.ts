@@ -10,3 +10,13 @@ export async function GET(req: NextRequest) {
         return NextResponse.json({ error: error.message }, { status: 400 });
     }
 }
+
+export async function POST(req: NextRequest) {
+    try {
+        const { name, url, description } = await req.json();
+        const newTask = await ourBingoTaskRouter.createBingoTask(name, url, description);
+        return NextResponse.json(newTask, { status: 201 });
+    } catch (error: any) {
+        console.log(error)
+        return NextResponse.json({ error: error.message }, { status: 400 });
+    }};

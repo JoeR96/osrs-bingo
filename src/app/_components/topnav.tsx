@@ -1,13 +1,24 @@
-"use client"
+"use client";
+import { useRouter } from "next/navigation";
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 import CreateBingoBoard from "../ImplentCreateBingoFormLater";
 import useBoardStore from "../state/bingoboardstore";
 
 export function TopNav() {
-    const {resetBoardData} = useBoardStore();
+    const router = useRouter();
+    const { resetBoardData } = useBoardStore();
 
     const handleHomeClick = () => {
         resetBoardData();
+        router.push("/"); 
+    };
+
+    const handleEditBingoBoardClick = () => {
+        router.push("/bingoboard"); 
+    };
+
+    const handleTasksClick = () => {
+        router.push("/bingotasks"); 
     };
 
     return (
@@ -15,14 +26,16 @@ export function TopNav() {
         <div>Bingo Board</div>
         <div className="flex items-center space-x-4">
             <button onClick={handleHomeClick}>Home</button>
+            <button onClick={handleTasksClick}>Tasks</button>
             <SignedOut>
                 <SignInButton />
             </SignedOut>
             <SignedIn>
                 <CreateBingoBoard />
                 <UserButton />
+                <button onClick={handleEditBingoBoardClick}>Edit Bingo Board</button>
             </SignedIn>
         </div>
       </nav>
-    )
+    );
 }

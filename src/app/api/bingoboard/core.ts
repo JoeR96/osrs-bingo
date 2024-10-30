@@ -1,9 +1,9 @@
 // core.ts
 import { auth } from "@clerk/nextjs/server";
-import { eq } from "drizzle-orm";
+import { eq, inArray } from "drizzle-orm";
+import { get } from "http";
 import { db } from "~/server/db";
-import { bingo_boards } from "~/server/db/schema";
-import { BingoBoard } from "~/types/types";
+import { bingo_board_tasks, bingo_boards, bingo_tasks } from "~/server/db/schema";
 import { generateAccessCode } from "~/utils/accessTokenGenerator";
 
 export const ourBingoRouter = {
@@ -18,16 +18,77 @@ export const ourBingoRouter = {
             description,
             accessCode: generateAccessCode(),
         });
+        
         return newBoard;
     },
 
     async getBingoBoard(id: string) {
         const board = await db.query.bingo_boards.findFirst({ where: eq(bingo_boards.accessCode, id) });
 
-        if (!board) throw new Error("Board not found");
+        if (!board) throw new Error("Individual board not found");
 
         console.log(board)
         return board;
+    },
+
+    async getBingoBoardTasks(id: string) {
+        const board = await db.query.bingo_boards.findFirst({ where: eq(bingo_boards.id, id) });
+        console.log("Id", id);
+        if (!board) throw new Error("Board not found");
+
+        const boardTaskIds = await db.query.bingo_board_tasks.findMany({
+            where: eq(bingo_board_tasks.bingoBoardId, board.id),
+            select: (fields) => fields.taskId,
+        });
+
+        if (!boardTaskIds || boardTaskIds.length === 0) return [];
+
+        const taskIds = boardTaskIds.map(task => task.bingoTaskId);
+
+        const tasks = await db.query.bingo_tasks.findMany({
+            where: inArray(bingo_tasks.id,taskIds),
+        });
+
+        if (!tasks || tasks.length === 0) return [];
+
+        console.log("task count", tasks.length);
+        return tasks;
+    },
+
+    async getUserBingoBoards() {  
+        const user = auth();
+        if (!user.userId) throw new Error("Unauthorized");
+        
+        const boards = await db.query.bingo_boards.findMany({
+            where: eq(bingo_boards.userId, user.userId as string),
+            orderBy: (model, { desc }) => desc(model.id),
+          });
+
+        if (!boards) throw new Error("User board's not found");
+
+        return boards;
+    },
+
+    async addTasksToBoard(id: string, taskIds: string[]) {
+        const user = auth();
+        if (!user.userId) throw new Error("Unauthorized");
+
+        const board = await db.query.bingo_boards.findFirst({ where: eq(bingo_boards.id, id) });
+        if (!board) throw new Error("Board not found");
+
+        const tasks = await db.query.bingo_tasks.findMany({
+            where: inArray(bingo_tasks.id, taskIds),
+            orderBy: (model, { desc }) => desc(model.id),
+          });
+
+        if (!tasks) throw new Error("Tasks not found");
+
+                await Promise.all(tasks.map(task => 
+                        db.insert(bingo_board_tasks).values({
+                                bingoBoardId: board.id,
+                                bingoTaskId: task.id,
+                        })
+                ));
     },
 };
 
