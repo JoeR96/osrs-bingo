@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { BingoBoard as BingoBoardType } from "~/types/types";
 import BingoBoard, { BingoBoardTask } from "../BingoBoard";
 
@@ -35,7 +35,9 @@ export default function EditBingoBoard() {
 function UserOwnedBingoBoards({ userOwnedBoards, selectedBoard, setSelectedBoard, bingoTasks, setBingoTasks }) {
     const [allTasks, setAllTasks] = useState([]);
     const [selectedTasks, setSelectedTasks] = useState([]);
+    const [searchTerm, setSearchTerm] = useState("");
     const [isDropdownVisible, setIsDropdownVisible] = useState(false);
+    const dropdownRef = useRef(null);
 
     useEffect(() => {
         const fetchAllTasks = async () => {
@@ -47,6 +49,19 @@ function UserOwnedBingoBoards({ userOwnedBoards, selectedBoard, setSelectedBoard
         fetchAllTasks();
     }, []);
 
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                setIsDropdownVisible(false);
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [dropdownRef]);
+
     const handleTaskSelection = (taskId) => {
         setSelectedTasks((prevSelected) =>
             prevSelected.includes(taskId)
@@ -55,12 +70,16 @@ function UserOwnedBingoBoards({ userOwnedBoards, selectedBoard, setSelectedBoard
         );
     };
 
+    const handleSearchChange = (event) => {
+        setSearchTerm(event.target.value);
+        setIsDropdownVisible(event.target.value !== "");
+    };
+
     const handleBoardClick = async (board) => {
         setSelectedBoard(board);
         const response = await fetch(`/api/bingoboard/tasks/${board.id}`);
         const data = await response.json();
         setBingoTasks(data);
-        setSelectedTasks(data.map((task) => task.id));
     };
 
     const handleAddTasksToBoard = async () => {
@@ -76,66 +95,68 @@ function UserOwnedBingoBoards({ userOwnedBoards, selectedBoard, setSelectedBoard
         }
     };
 
-    const toggleDropdown = () => {
-        setIsDropdownVisible(!isDropdownVisible);
-    };
+    const filteredTasks = allTasks.filter((task) =>
+        task.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
     return (
-        <div>
-            <div>
-                <div className="text-center text-gray-200">
+        <div className="flex ml-20">
+            <div className="w-1/4 pt-20">
+                <div className="text-center text-gray-200 bg-gray-800 border border-gray-800 rounded-md p-4 m-8 m-t">
                     <h2 className="text-2xl font-bold mb-2">User Owned Bingo Boards</h2>
                     <ul>
                         {userOwnedBoards.map((board) => (
                             <li key={board.id} onClick={() => handleBoardClick(board)}>
-                                <h3 className="mb-1">{board.name}</h3>
+                                <h3 className="mb-1 cursor-pointer">{board.name}</h3>
                             </li>
                         ))}
                     </ul>
                 </div>
+                <div className="text-center text-gray-200 bg-gray-800 border border-gray-800 rounded-md p-4 m-8 m-t">
+                    <h2 className="text-xl font-bold mb-2 text-gray-200">Add Tasks to Board</h2>
+                    <div ref={dropdownRef}>
+                        <input
+                            type="text"
+                            placeholder="Search tasks..."
+                            value={searchTerm}
+                            onChange={handleSearchChange}
+                            onClick={() => setIsDropdownVisible(true)}
+                            className="block w-full px-3 py-2 mb-2 border border-gray-600 rounded bg-gray-800 text-white"
+                        />
+                        {isDropdownVisible && (
+                            <div className="max-h-40 overflow-y-auto border border-gray-600 rounded bg-gray-800 text-white">
+                                {filteredTasks.map((task) => (
+                                    <div
+                                        key={task.id}
+                                        className={`flex items-center mb-2 p-2 cursor-pointer hover:bg-gray-700 ${selectedTasks.includes(task.id) ? 'bg-gray-700' : ''}`}
+                                        onClick={() => handleTaskSelection(task.id)}
+                                    >
+                                        <input
+                                            type="checkbox"
+                                            className="mr-2"
+                                            checked={selectedTasks.includes(task.id)}
+                                            readOnly
+                                        />
+                                        <img src={task.url} alt={task.name} className="w-6 h-6 mr-2" />
+                                        <span>{task.name}</span>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                        <button 
+                            onClick={handleAddTasksToBoard} 
+                            className="mt-2 bg-slate-500 hover:bg-slate-400 text-white p-2 rounded"
+                        >
+                            Add Selected Tasks to Board
+                        </button>
+                    </div>
+                </div>
             </div>
 
-            {selectedBoard && (
-                <>
-                    
+            <div className="w-3/4">
+                {selectedBoard && (
                     <BingoBoard board={selectedBoard} />
-
-                    <button onClick={toggleDropdown}>
-                        {isDropdownVisible ? 'Hide Task Selection' : 'Add Tasks'}
-                    </button>
-
-                    {isDropdownVisible && (
-                        <TaskDropdown 
-                            allTasks={allTasks} 
-                            selectedTasks={selectedTasks} 
-                            handleTaskSelection={handleTaskSelection} 
-                        />
-                    )}
-
-                    <button onClick={handleAddTasksToBoard}>Add Selected Tasks to Board</button>
-                </>
-            )}
-        </div>
-    );
-}
-
-function TaskDropdown({ allTasks, selectedTasks, handleTaskSelection }) {
-    return (
-        <div>
-            <h4>Select tasks to add:</h4>
-            <div className="mt-2 p-2 border border-gray-400 rounded-m">
-                {allTasks.map((task) => (
-                    <div key={task.id} className="flex items-center mb-2">
-                        <input
-                            type="checkbox"
-                            className="mr-2"
-                            checked={selectedTasks.includes(task.id)}
-                            onChange={() => handleTaskSelection(task.id)}
-                        />
-                        <img src={task.url} alt={task.name} className="w-6 h-6 mr-2" />
-                        <span>{task.name}</span>
-                    </div>
-                ))}
+                )}
             </div>
         </div>
     );

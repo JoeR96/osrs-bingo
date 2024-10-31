@@ -59,7 +59,7 @@ export default function BingoTasks() {
 
       <table className="min-w-full border border-gray-200 shadow-md rounded-lg">
         <thead>
-          <tr className="bg-gray-200">
+          <tr >
             <th className="px-4 py-2 border-b">Name</th>
             <th className="px-4 py-2 border-b">Description</th>
             <th className="px-4 py-2 border-b">Image</th>
@@ -93,7 +93,7 @@ export default function BingoTasks() {
           <div className="bg-gray-700 p-6 rounded-lg shadow-md w-80">
             <h2 className="text-lg font-bold text-white mb-4">New Bingo Task</h2>
             <form onSubmit={handleSubmit}>
-              <div className="mb-4">
+              <div className="mb-4 bg">
                 <label htmlFor="name" className="block text-sm font-medium text-white">
                   Task Name
                 </label>

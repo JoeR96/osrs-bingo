@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { use, useEffect, useState } from 'react';
 import Image from 'next/image';
+export const dynamic = "force-dynamic";
 
 type BingoBoardProps = {
   name: string;
@@ -9,11 +10,22 @@ type BingoBoardProps = {
   updatedAt: string | number | Date;
 };
 const BingoBoard = ({ board }: { board: BingoBoardProps }) => {
+
+  const [bingoTasks, setBingoTasks] = useState<BingoBoardTask[]>([]);
+  const getBoardTasks = async () => {
+    const response = await fetch(`/api/bingoboard/tasks/${board.id}`);
+    const data = await response.json();
+    setBingoTasks(data);
+};
+
+useEffect(() => {
+    getBoardTasks();
+}, [board]);
   return (
-      <div className='p-6 bg-gray-900 shadow-lg rounded-lg h-100'>
+      <div className='p-6 bg-gray-900 rounded-lg h-100'>
         <h2 className="text-6xl font-extrabold text-center mb-2">{board.name}</h2>
         <div className="flex flex-wrap justify-center mt-6 gap-4">
-          {[...dummyTasks,...dummyTasks].map((task, index) => (
+          {bingoTasks.map((task, index) => (
             <BingoBoardTask key={index} task={task} />
           ))}
         </div>

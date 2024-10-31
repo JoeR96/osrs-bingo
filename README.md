@@ -14,7 +14,7 @@
 - [] Add new route for non signed in view to get board from access code (the id is used for both)
 - [] Create a consistent set of styling for use on components (color palette?)
 - [] Style the Task Board appropriately
-- [] Style the Edit Bingo Board Appropriately
+- [x] Style the Edit Bingo Board Appropriately
     - [] Anchor User Owned Boards to the left
     - [] Render Title/Description of Board
     - [] Where to place the dropdown?
