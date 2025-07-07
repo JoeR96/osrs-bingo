@@ -17,6 +17,7 @@ export const bingo_tasks = createTable(
   "bingo_task",
   {
     id: serial("id").primaryKey(),
+    vegetable: varchar("vegetable", { length: 256 }).notNull(),
     name: varchar("name", { length: 256 }).notNull(),
     description: varchar("description", { length: 256 }).notNull(),
     url: varchar("url", { length: 1024 }).notNull(),
